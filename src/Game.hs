@@ -49,15 +49,13 @@ correctGuess s = (s == (pegs,0))
 
 -- | This function should check that the code entered by a human player is
 -- valid. In other words, it should have the length given by `pegs` and it
-
 -- should only contain valid symbols.
 ------------------------------------
--- [Your explanation]
+-- local function go pattern matches whether the the
 validateCode :: Code -> Bool
-validateCode xs = go xs
-  where
-    go [_,_,_,_] = all (\x -> x `elem` symbols) xs
-    go _ = False
+validateCode xs = if length xs == pegs
+                  then all (\x -> x `elem` symbols) xs
+                  else False
 
 
 -- | All possible codes.
