@@ -48,7 +48,6 @@ correctGuess score = undefined
 
 -- | This function should check that the code entered by a human player is
 -- valid. In other words, it should have the length given by `pegs` and it
-
 -- should only contain valid symbols.
 ------------------------------------
 -- [Your explanation]
