@@ -44,7 +44,7 @@ firstGuess = "aabb"
 ------------------------------------
 -- [Your explanation]
 correctGuess :: Score -> Bool
-correctGuess score = undefined
+correctGuess s = (s == (4,0))
 
 -- | This function should check that the code entered by a human player is
 -- valid. In other words, it should have the length given by `pegs` and it
