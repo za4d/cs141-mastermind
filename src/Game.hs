@@ -42,9 +42,10 @@ firstGuess = "aabb"
 
 -- | Determines whether a score indicates that a guess was correct or not.
 ------------------------------------
--- [Your explanation]
+{-- A simple test that checks whether the score says all the peg have the right
+    colour and position i.e. max (pegs) number of coloured markers and no white markers --}
 correctGuess :: Score -> Bool
-correctGuess s = (s == (4,0))
+correctGuess s = (s == (pegs,0))
 
 -- | This function should check that the code entered by a human player is
 -- valid. In other words, it should have the length given by `pegs` and it
