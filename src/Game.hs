@@ -54,7 +54,11 @@ correctGuess s = (s == (pegs,0))
 ------------------------------------
 -- [Your explanation]
 validateCode :: Code -> Bool
-validateCode xs = undefined
+validateCode xs = go xs
+  where
+    go [_,_,_,_] = all (\x -> x `elem` symbols) xs
+    go _ = False
+
 
 -- | All possible codes.
 ------------------------------------
