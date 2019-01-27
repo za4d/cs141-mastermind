@@ -6,6 +6,7 @@
 -- | This module should contain your game code.
 module Game where
 import Data.List
+import Data.Ix
 --------------------------------------------------------------------------------
 
 -- | The number of pegs in a code.
@@ -85,7 +86,7 @@ score :: Code -> Code -> Score
 score code guess = (c,w-c)
   where
     c = countColored code guess
-    w = countWhite code guess
+    w = countWhite' code guess
 
 countColored :: Code -> Code -> Int
 countColored [] [] = 0
@@ -96,8 +97,28 @@ countColored (x:xs) (y:ys)
 countWhite :: Code -> Code -> Int
 countWhite code guess = length $ filter (\x -> x `elem` guess) code
 
---score' :: Code -> Code -> Score
---score' code guess = [ x | s <- code, ]
+
+countWhite' :: Code -> Code -> Int
+countWhite' [] _ = 0
+countWhite' (x:xs) guess
+  | x `elem` guess  = 1 + countWhite' xs (delete x guess)
+  | otherwise       = countWhite' xs guess
+
+
+
+
+score' :: Code -> Code -> Score
+score' code guess = (c,w-c)
+  where
+    c = filterL (uncurry (==)) (zip guess code)
+    w = filterL (`elem` guess) code
+
+filterL :: (a -> Bool) -> [a] -> Int
+filterL p xs = length $ filter p xs
+
+
+-- compareLists:: Eq a => (a -> a -> Bool) -> [a] -> [a] -> Int
+-- countWhite p listA listB = filter (\x -> x `elem` listB) listA
 
 -- | Chooses the next guess. If there is only one option left, choose it.
 -- Otherwise, calculate the hit score for each code and choose the code
