@@ -5,7 +5,7 @@
 
 -- | This module should contain your game code.
 module Game where
-
+import Data.List
 --------------------------------------------------------------------------------
 
 -- | The number of pegs in a code.
@@ -51,10 +51,11 @@ correctGuess s = (s == (pegs,0))
 -- valid. In other words, it should have the length given by `pegs` and it
 -- should only contain valid symbols.
 ------------------------------------
--- local function go pattern matches whether the the
+{-- If the code is the correct length and all elements are also elements of symbols
+    else its invalid --}
 validateCode :: Code -> Bool
 validateCode xs = if length xs == pegs
-                  then all (\x -> x `elem` symbols) xs
+                  then all (\x -> x `elem` symbols) xs --
                   else False
 
 
@@ -62,13 +63,21 @@ validateCode xs = if length xs == pegs
 ------------------------------------
 -- [Your explanation]
 codes :: [Code]
-codes = undefined
+codes = permute pegs symbols
+
+permute :: Int -> [a] -> [[a]]
+permute 0 _ = [[]]
+permute n xs = [ x:ys | x <- xs, ys <- (permute (n-1) xs)]
 
 -- | All possible scores.
 ------------------------------------
--- [Your explanation]
+-- [Your explanation][NO CONDITIONAL NEEDED]
 results :: [Score]
-results = undefined
+results = nub $ map x codes
+  where
+    x = score $ take pegs symbols 
+  --(pegs,0):[ (x,y) | x <- [0..pegs], y <- [0..pegs], x + y < pegs]
+--results = [ (x,y) | x <- [0..pegs], y <- [0..pegs], x+y <= pegs]
 
 -- | Scores a guess against a code. Symbols which are in the right place
 -- and of the right type score a coloured marker. Symbols which are of the
@@ -76,7 +85,21 @@ results = undefined
 ------------------------------------
 -- [Your explanation]
 score :: Code -> Code -> Score
-score code guess = undefined
+score code guess = (c,w-c)
+  where
+    c = countColored code guess
+    w = countWhite code guess
+
+countColored :: Code -> Code -> Int
+countColored [] [] = 0
+countColored (x:xs) (y:ys)
+  | x == y    = 1 + countColored xs ys
+  | otherwise = countColored xs ys
+
+countWhite :: Code -> Code -> Int
+countWhite code guess = length $ filter (\x -> x `elem` guess) code
+
+
 
 -- | Chooses the next guess. If there is only one option left, choose it.
 -- Otherwise, calculate the hit score for each code and choose the code
