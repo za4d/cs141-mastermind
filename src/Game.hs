@@ -75,7 +75,7 @@ permute n xs = [ x:ys | x <- xs, ys <- (permute (n-1) xs)]
 results :: [Score]
 results = nub $ map x codes
   where
-    x = score $ take pegs symbols 
+    x = score $ take pegs symbols
   --(pegs,0):[ (x,y) | x <- [0..pegs], y <- [0..pegs], x + y < pegs]
 --results = [ (x,y) | x <- [0..pegs], y <- [0..pegs], x+y <= pegs]
 
