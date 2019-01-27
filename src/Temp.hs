@@ -1,4 +1,4 @@
 
-module Test where
+module Temp where
 
   import Data.List
