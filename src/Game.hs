@@ -73,12 +73,9 @@ permute n xs = [ x:ys | x <- xs, ys <- (permute (n-1) xs)]
 ------------------------------------
 -- [Your explanation][NO CONDITIONAL NEEDED]
 results :: [Score]
-results = nub $ map x codes
+results = nub $ map test codes
   where
-    x = score $ take pegs symbols
-  --(pegs,0):[ (x,y) | x <- [0..pegs], y <- [0..pegs], x + y < pegs]
---results = [ (x,y) | x <- [0..pegs], y <- [0..pegs], x+y <= pegs]
-
+    test = score $ take pegs (cycle symbols)
 -- | Scores a guess against a code. Symbols which are in the right place
 -- and of the right type score a coloured marker. Symbols which are of the
 -- right type but in the wrong place score a white marker.
@@ -99,7 +96,8 @@ countColored (x:xs) (y:ys)
 countWhite :: Code -> Code -> Int
 countWhite code guess = length $ filter (\x -> x `elem` guess) code
 
-
+--score' :: Code -> Code -> Score
+--score' code guess = [ x | s <- code, ]
 
 -- | Chooses the next guess. If there is only one option left, choose it.
 -- Otherwise, calculate the hit score for each code and choose the code
