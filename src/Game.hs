@@ -71,22 +71,37 @@
 
   -- | All possible codes.
   ------------------------------------
-  -- [Your explanation]
+  {--
+  code = all possible permuations symbol that are length n of
+  --}
   codes :: [Code]
   codes = permute pegs symbols
 
+  {--
+  TODO: Better explanations?
+  The permuation set of length n (p n) is
+  the elements in (p n-1) cons each possible element
+  --}
   permute :: Int -> [a] -> [[a]]
-  permute 0 _ = [[]]
-  permute n xs = [ x:ys | x <- xs, ys <- (permute (n-1) xs)]
+  permute 0 _  = [[]]
+  permute n xs = [ x:ys | x <- xs, ys <- permute (n-1) xs]
+
+
 
 
   -- | All possible scores.
   ------------------------------------
-  -- [Your explanation][NO CONDITIONAL NEEDED]
+  {--
+    Score all possible guesses (codes) against a
+    code pulled from the list of symbols (c).
+    nub removes all duplicates and leave the set of all possible results
+    (cycle used incase number of symbols is less then num of pegs)
+  --}
   results :: [Score]
-  results = nub $ map test codes
-    where
-      test = score $ take pegs (cycle symbols)
+  results = let
+              c = take pegs (cycle symbols)
+            in
+              nub $ map (score c) codes
 
 
   -- | Scores a guess against a code. Symbols which are in the right place
@@ -94,7 +109,10 @@
   -- right type but in the wrong place score a white marker.
   ------------------------------------
   -- [Your explanation]
-  score            :: Code -> Code -> Score
+  {--
+
+  --}
+  score :: Code -> Code -> Score
   score code guess = (c,w-c)
     where
       c = countColored code guess
@@ -118,6 +136,9 @@
   -- with the largest hit score.
   ------------------------------------
   -- [Your explanation]
+  {--
+
+  --}
   nextGuess :: [Code] -> Code
   nextGuess s = undefined
 
@@ -127,6 +148,9 @@
   -- to those which would produce the same score we got from the codemaker.
   ------------------------------------
   -- [Your explanation]
+  {--
+
+  --}
   eliminate :: Score -> Code -> [Code] -> [Code]
   eliminate lastScore guess codes = undefined
 
