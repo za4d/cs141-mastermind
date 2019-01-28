@@ -173,17 +173,22 @@
   ------------------------------------
   -- [Your explanation]
   {--
-
+  Instead of finding the maximin of codes removed from S, it was easier
+  to use the 'eliminate' function and find the contrapositive equivilent:
+  the minimax of codes left in S
   --}
-  -- nextGuess :: [Code] -> Code
-  -- nextGuess s = maximum [ minRemoval g | g <- codes ]
+  nextGuess :: [Code] -> Code
+  nextGuess s = minimumBy (comparing maxs) s
+    where
+      maxs guess = maximum [ length (eliminate x guess s) | x <- results]
+      -- returns the maximum codes a would guess will leave in s
 
-  minRemoval g = minimumBy (compareScores) [ s | s <- results ]
-                            where
-                              compareScores x y = comparing (removals x g codes) (removals y g codes)
+ -- removal g = minimumBy (compareScores) [ s | s <- results ]
+ --                            where
+ --                              compareScores x y = comparing (removals x g codes) (removals y g codes)
 
-  removals :: Score -> Code -> [Code] -> Int
-  removals score guess codes = length $ codes \\ eliminate score guess codes
+  -- removals :: Score -> Code -> [Code] -> Int
+  -- removals score guess codes = length $ codes \\ eliminate score guess codes
 
 
 
