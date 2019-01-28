@@ -7,6 +7,7 @@
   module Game where
   import Data.List
   import Data.Ix
+  import Data.Ord
   --------------------------------------------------------------------------------
 
   -- | The number of pegs in a code.
@@ -174,9 +175,15 @@
   {--
 
   --}
-  nextGuess :: [Code] -> Code
-  nextGuess s = undefined
+  -- nextGuess :: [Code] -> Code
+  -- nextGuess s = maximum [ minRemoval g | g <- codes ]
 
+  minRemoval g = minimumBy (compareScores) [ s | s <- results ]
+                            where
+                              compareScores x y = comparing (removals x g codes) (removals y g codes)
+
+  removals :: Score -> Code -> [Code] -> Int
+  removals score guess codes = length $ codes \\ eliminate score guess codes
 
 
 
