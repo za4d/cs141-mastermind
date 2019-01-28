@@ -41,18 +41,29 @@
 
   --------------------------------------------------------------------------------
 
+
+
+
+
   -- | Determines whether a score indicates that a guess was correct or not.
   ------------------------------------
   {-- A simple test that checks whether the score says all the peg have the right
       colour and position i.e. max (pegs) number of coloured markers and no white markers --}
   correctGuess:: Score -> Bool
-  correctGuess s = (s == (pegs,0))
+  correctGuess s =  s == (pegs,0)
 
--- TODO: Remove elemOf ?
+
+
+
+
+  -- TODO: Remove elemOf ?
   -- -- | Same as elem function but takes list first then the term
   -- -- Used so the higher order functions is neater
   -- elemOf :: (Foldable t, Eq a) => t a -> a -> Bool
-  -- elemOf = flip elem
+
+
+
+
 
   -- | This function should check that the code entered by a human player is
   -- valid. In other words, it should have the length given by `pegs` and it
@@ -69,7 +80,10 @@
     | otherwise           = False
 
 
-  -- | All possible codes.
+
+
+
+    -- | All possible codes.
   ------------------------------------
   {--
   code = all possible permuations symbol that are length n of
@@ -89,6 +103,7 @@
 
 
 
+
   -- | All possible scores.
   ------------------------------------
   {--
@@ -101,6 +116,9 @@
   results = let c = take pegs (cycle symbols)
             in
               nub $ map (score c) codes
+
+
+
 
 
   -- | Scores a guess against a code. Symbols which are in the right place
@@ -144,6 +162,10 @@
   --         (x:xs) = lx
   --         (y:ys) = ly
 
+
+
+
+
   -- | Chooses the next guess. If there is only one option left, choose it.
   -- Otherwise, calculate the hit score for each code and choose the code
   -- with the largest hit score.
@@ -155,16 +177,19 @@
   nextGuess :: [Code] -> Code
   nextGuess s = undefined
 
+
+
+
+
   -- | Remove all codes from the remaining possibilities which would result in
   -- a different score for the guess if they were the code.
   -- In other words, given the set of remaining possible codes, narrow it down
   -- to those which would produce the same score we got from the codemaker.
   ------------------------------------
   -- [Your explanation]
-  {--
 
   --}
   eliminate :: Score -> Code -> [Code] -> [Code]
-  eliminate lastScore guess codes = undefined
+  eliminate lastScore guess codes = [ x | x <- codes, (score x guess) == lastScore]
 
   --------------------------------------------------------------------------------
