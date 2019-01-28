@@ -98,8 +98,7 @@
     (cycle used incase number of symbols is less then num of pegs)
   --}
   results :: [Score]
-  results = let
-              c = take pegs (cycle symbols)
+  results = let c = take pegs (cycle symbols)
             in
               nub $ map (score c) codes
 
@@ -109,6 +108,7 @@
   -- right type but in the wrong place score a white marker.
   ------------------------------------
   -- [Your explanation]
+  --TODO :: countColored countWhite COMBINE
   {--
 
   --}
@@ -118,18 +118,31 @@
       c = countColored code guess
       w = countWhite code guess
 
+
+
   countColored :: Code -> Code -> Int
-  countColored [] [] = 0
+  -- countColored xs ys = count elem xs ys
+  countColored []      _    = 0
   countColored (x:xs) (y:ys)
-    | x == y    = 1 + countColored xs ys
-    | otherwise = countColored xs ys
+    | x == y                = 1 + countColored xs ys
+    | otherwise             =     countColored xs ys
 
   countWhite :: Code -> Code -> Int
-  countWhite [] _ = 0
+  -- countWhite xs ys = count (==) xs ys
+  countWhite []     _     = 0
   countWhite (x:xs) guess
-    | x `elem` guess  = 1 + countWhite xs (delete x guess)
-    | otherwise       = countWhite xs guess
+    | x `elem` guess      = 1 + countWhite xs (delete x guess)
+    | otherwise           =     countWhite xs guess
 
+
+  -- count :: Eq a => ([a] -> [a] -> Bool) -> Code -> Code -> Int
+  -- count _ [] _ = 0
+  -- count p lx ly
+  --     | p lx ly      = 1 + count xs (delete x ly)
+  --     | otherwise    = count xs ly
+  --       where
+  --         (x:xs) = lx
+  --         (y:ys) = ly
 
   -- | Chooses the next guess. If there is only one option left, choose it.
   -- Otherwise, calculate the hit score for each code and choose the code
