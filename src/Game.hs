@@ -40,41 +40,21 @@
   firstGuess :: Code
   firstGuess = "aabb"
 
+
+
   --------------------------------------------------------------------------------
-
-
-
-
-
-  -- | Determines whether a score indicates that a guess was correct or not.
-  ------------------------------------
-  {-- A simple test that checks whether the score says all the peg have the right
-      colour and position i.e. max (pegs) number of coloured markers and no white markers --}
+  -- | Simply checks whether all the score pegs are coloured and
+  --------------------------------------------------------------------------------
   correctGuess:: Score -> Bool
   correctGuess s =  s == (pegs,0)
 
 
 
-
-
-  -- TODO: Remove elemOf ?
-  -- -- | Same as elem function but takes list first then the term
-  -- -- Used so the higher order functions is neater
-  -- elemOf :: (Foldable t, Eq a) => t a -> a -> Bool
-
-
-
-
-
-  -- | This function should check that the code entered by a human player is
-  -- valid. In other words, it should have the length given by `pegs` and it
-  -- should only contain valid symbols.
   ------------------------------------
-  {--
-  If the code is the correct length and
-  if all elements are also elements of symbols
-  else its invalid
-  --}
+  -- | This function checks the code is valid by testing...
+  --    - whether it's the correct length
+  --    - if so, are all of its elements in 'symbols'
+  ------------------------------------
   validateCode :: Code -> Bool
   validateCode xs
     | length xs == pegs   = all (`elem` symbols) xs
@@ -82,39 +62,29 @@
 
 
 
-
-
-    -- | All possible codes.
   ------------------------------------
-  {--
-  code = all possible permuations symbol that are length n of
-  --}
+  -- | All possible codes found recursivly.
+  -- All possible permuations of length n =
+  -- All symbols : All possible permuations of length n-1
+  ------------------------------------
   codes :: [Code]
-  codes = permute pegs symbols
+  codes = permutate pegs symbols
 
-  {--
-  TODO: Better explanations?
-  The permuation set of length n (p n) is
-  the elements in (p n-1) cons each possible element
-  --}
-  permute :: Int -> [a] -> [[a]]
-  permute 0 _  = [[]]
-  permute n xs = [ x:ys | x <- xs, ys <- permute (n-1) xs]
+  permutate :: Int -> [a] -> [[a]]
+  permutate 0 _  = [[]]
+  permutate n xs = [ x:ys | x <- xs, ys <- permutate (n-1) xs]
 
 
 
-
-
-  -- | All possible scores.
   ------------------------------------
-  {--
-    Score all possible guesses (codes) against a
-    code pulled from the list of symbols (c).
-    nub removes all duplicates and leave the set of all possible results
-    (cycle used incase number of symbols is less then num of pegs)
-  --}
+  -- | All possible scores genererated by scoring all possible guesses (codes)
+  -- against a code (c) pulled from the list of possible symbols. 'nub'
+  -- then removes all duplicates and leave the set of all possible unique results
+  -- (cycle used incase number of symbols is less then num of pegs)
+  ------------------------------------
   results :: [Score]
-  results = let c = take pegs (cycle symbols)
+  results = let
+              c = take pegs (cycle symbols)
             in
               nub $ map (score c) codes
 
@@ -122,15 +92,10 @@
 
 
 
-  -- | Scores a guess against a code. Symbols which are in the right place
-  -- and of the right type score a coloured marker. Symbols which are of the
-  -- right type but in the wrong place score a white marker.
-  ------------------------------------
-  -- [Your explanation]
   --TODO :: countColored countWhite COMBINE
-  {--
-
-  --}
+  ------------------------------------
+  -- |
+  ------------------------------------
   score :: Code -> Code -> Score
   score code guess = (c,w-c)
     where
@@ -166,27 +131,22 @@
 
 
 
-
+  -----------------------------------
   -- | Instead of finding the maximin of codes removed from S, it was easier
   -- to use the 'eliminate' function and find the contrapositive equivilent
   -- i.e. the minimax of codes left in S. So the function finds the guess
   -- in S with the shortest: longest possible S after elimination (max_s)
+  ------------------------------------
   nextGuess :: [Code] -> Code
   nextGuess s = mini max_s
     where  mini  f = minimumBy (comparing f) s
            max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
-      -- returns the largest S a 'g'uess could leave
+           -- returns the largest S a 'g'uess could leave
 
-
-  -- | Remove all codes from the remaining possibilities which would result in
-  -- a different score for the guess if they were the code.
-  -- In other words, given the set of remaining possible codes, narrow it down
-  -- to those which would produce the same score we got from the codemaker.
   ------------------------------------
-  -- [Your explanation]
-
-  --}
+  -- |
+  ------------------------------------
   eliminate :: Score -> Code -> [Code] -> [Code]
-  eliminate lastScore guess codes = [ x | x <- codes, (score x guess) == lastScore]
+  eliminate lastScore guess codes = [ c | c <- codes, (score c guess) == lastScore]
 
   --------------------------------------------------------------------------------
