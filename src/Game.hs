@@ -167,30 +167,15 @@
 
 
 
-  -- | Chooses the next guess. If there is only one option left, choose it.
-  -- Otherwise, calculate the hit score for each code and choose the code
-  -- with the largest hit score.
-  ------------------------------------
-  -- [Your explanation]
-  {--
-  Instead of finding the maximin of codes removed from S, it was easier
-  to use the 'eliminate' function and find the contrapositive equivilent:
-  the minimax of codes left in S
-  --}
+  -- | Instead of finding the maximin of codes removed from S, it was easier
+  -- to use the 'eliminate' function and find the contrapositive equivilent
+  -- i.e. the minimax of codes left in S. So the function finds the guess
+  -- in S with the shortest: longest possible S after elimination (max_s)
   nextGuess :: [Code] -> Code
-  nextGuess s = minimumBy (comparing maxs) s
-    where
-      maxs guess = maximum [ length (eliminate x guess s) | x <- results]
-      -- returns the maximum codes a would guess will leave in s
-
- -- removal g = minimumBy (compareScores) [ s | s <- results ]
- --                            where
- --                              compareScores x y = comparing (removals x g codes) (removals y g codes)
-
-  -- removals :: Score -> Code -> [Code] -> Int
-  -- removals score guess codes = length $ codes \\ eliminate score guess codes
-
-
+  nextGuess s = mini max_s
+    where  mini  f = minimumBy (comparing f) s
+           max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
+      -- returns the largest S a 'g'uess could leave
 
 
   -- | Remove all codes from the remaining possibilities which would result in
