@@ -147,12 +147,6 @@ module Game where
            max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
            -- returns the largest S a 'g'uess could leave
 
-  minimax :: (Ord a, Ord b) => (a -> b) -> [[a]] -> [a]
-  minimax f xss = minimumBy (comparing valg)
-    where valg g = maximum . map length . groupOn id . map (score g) $ ss
-
-  groupOn :: Ord b => (a -> b)  -> [a] -> [[a]]
-  groupOn f = groupBy ((==) `on`  f) . sortBy (comparing f)
   ------------------------------------
   -- |
   ------------------------------------
