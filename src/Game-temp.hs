@@ -4,7 +4,6 @@
 --------------------------------------------------------------------------------
 
 
-
 -- | This module should contain your game code.
 module Game where
   import Data.List
