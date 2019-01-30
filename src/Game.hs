@@ -3,9 +3,6 @@
 -- Coursework 1: Mastermind                                                   --
 --------------------------------------------------------------------------------
 
-{-- TODO
- - acbf
- - acfc   --}
 
 -- | This module should contain your game code.
 module Game where
@@ -160,29 +157,42 @@ module Game where
 
   nextGuess :: [Code] -> Code
   nextGuess (ans:[]) = ans
-  nextGuess s = nextGuessM s
+  nextGuess s =
+    nextGuessM s -- MAIN
+    -- nextGuessT s -- TEST
 
-
-
+-- "acbf" "acfc"
 -----
   nextGuessT :: [Code] -> Code
-  nextGuessT s = if (length s) == 1
-                then
-                  head s
-                else
-                  minimumBy (comparing valg) codes
-                    where valg g = maximum . map length . groupOn id . map (score g) $ s
-  temp = ["abcd","abdc","abbb","abcc"]
+  nextGuessT s =  if (length s) == 1
+                  then
+                    head s
+                  else
+                    minimumBy (comparing valg) codes
+                      where valg g =
+                                      maximum . map length . groupOn id . map (score g) $ s
 
   groupOn :: Ord b => (a -> b)  -> [a] -> [[a]]
   groupOn f = groupBy ((==) `on`  f) . sortBy (comparing f)
 
 -----
   nextGuessM :: [Code] -> Code
-  nextGuessM s = mini max_s
-    where  mini  f = minimumBy (comparing f) codes
-           max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
+  nextGuessM s = minimumBy (comparing max_s) codes
+                 where max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
            -- returns the largest S a 'g'uess could leave
+
+  temp :: [Code]
+  temp =
+    -- eliminate (2,0) "abbb" codes
+    ["abcd","abbb","abda","abdc","abdd","abde","aaaa","ffff","cccc"]
+
+  -- maximum . map length . groupOn id . map (score g) $ s
+  t4 = maximum t3
+  t3 = map length t2
+  t2 = groupOn id t1
+  t1 = map (score "abcd") $ t0 -- score each possible ans
+  t0 = temp -- possible ans
+
 -----
 
   ------------------------------------
