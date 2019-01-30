@@ -174,11 +174,17 @@ module Game where
 
   groupOn :: Ord b => (a -> b)  -> [a] -> [[a]]
   groupOn f = groupBy ((==) `on`  f) . sortBy (comparing f)
-
+  {--
+  (+) `on` f = \x y -> f x + f y
+  groupBy [a]->[[]] according to condition
+  --}
 -----
   nextGuessM :: [Code] -> Code
-  nextGuessM s = minimumBy (comparing max_s) codes
-                 where max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
+  nextGuessM s = maximumBy (comparing go) ((codes) ++ s)
+                  where go g = minimum [length (removals r g s) | r <- results]
+
+                 -- minimumBy (comparing max_s) s
+                 --    where max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
            -- returns the largest S a 'g'uess could leave
 
   temp :: [Code]
@@ -186,14 +192,36 @@ module Game where
     -- eliminate (2,0) "abbb" codes
     ["abcd","abbb","abda","abdc","abdd","abde","aaaa","ffff","cccc"]
 
-  -- maximum . map length . groupOn id . map (score g) $ s
-  t4 = maximum t3
-  t3 = map length t2
-  t2 = groupOn id t1
-  t1 = map (score "abcd") $ t0 -- score each possible ans
-  t0 = temp -- possible ans
+  tt s = minimumBy (comparing (tmax s)) codes
 
+  t6 = minimum t5
+  t5 = map (tmax temp) codes
+  --
+  tmax s g = maximum . map length . groupOn id . map (score g) $ s
+  t4 = maximum t3 -- return largest length
+  t3 = map length t2 -- seperate the scores into lengths
+  t2 = groupBy (==) . sort $ t1 -- sort and group equivilent scores
+  t2' = groupOn id t1 --
+  t1 = (\g -> map (score g) t0 ) $ "abbb" -- score each in S according to the guess
+  t0 = temp -- possible codes
+
+  r0 = [removals r "abbb" temp | r <- results]
+  r1 = map length r0
+  r2 = minimumBy (comparing length) [ removals r "abbb" temp | r <- results]
+
+  rr = maximumBy (comparing go) ((temp \\ codes) ++ temp)
+  go g = minimum [length (removals r g temp) | r <- results]
+
+  rrr = filter (\x -> go x == go rr) codes
+
+  rr1 g = eliminate (score "abbb" g) g temp
+  rr2 g = removals (score "abbb" g) g temp
 -----
+  removals :: Score -> Code -> [Code] -> [Code]
+  removals lastScore guess codes = codes \\ (eliminate lastScore guess codes)
+
+  removals' :: Score -> Code -> [Code] -> Int
+  removals' lastScore guess codes = length $ codes \\ (eliminate lastScore guess codes)
 
   ------------------------------------
   -- |
