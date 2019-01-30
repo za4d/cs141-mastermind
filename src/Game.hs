@@ -143,13 +143,16 @@ module Game where
   ------------------------------------
   nextGuess :: [Code] -> Code
   nextGuess s = mini max_s
-    where  mini  f = maximumBy (comparing f) s
-           max_s g = minimumBy (comparing length) [removals r g s | r <- results]
+    where  mini  f = minimumBy (comparing f) s
+           max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
            -- returns the largest S a 'g'uess could leave
-  
-  removals :: Score -> Code -> [Code] -> [Code]
-  removals score guess codes = codes \\ eliminate score guess codes
 
+  minimax :: (Ord a, Ord b) => (a -> b) -> [[a]] -> [a]
+  minimax f xss = minimumBy (comparing valg)
+    where valg g = maximum . map length . groupOn id . map (score g) $ ss
+
+  groupOn :: Ord b => (a -> b)  -> [a] -> [[a]]
+  groupOn f = groupBy ((==) `on`  f) . sortBy (comparing f)
   ------------------------------------
   -- |
   ------------------------------------
