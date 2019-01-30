@@ -12,6 +12,10 @@ module Game where
   import Data.List
   import Data.Ix
   import Data.Ord
+  --
+  import Control.Arrow ((***),second,first)
+  import Data.Function (on)
+  import System.IO
   --------------------------------------------------------------------------------
 
   -- | The number of pegs in a code.
@@ -100,6 +104,18 @@ module Game where
   ------------------------------------
   -- |
   ------------------------------------
+  score' :: Code -> Code -> Score
+  score' code guess = answer code guess
+
+  answer :: Code -> Code -> Score
+  answer xs = (length *** s) . partition (uncurry (==)) . zip xs
+     where
+     f  x (n,ys)  | x `elem` ys = (n + 1, delete x ys)
+                  | otherwise = (n,ys)
+     s xys = fst $ foldr f (0,ys') xs' where
+       (xs',ys') = unzip xys
+
+
   score :: Code -> Code -> Score
   score code guess = (c,w-c)
     where
@@ -141,11 +157,33 @@ module Game where
   -- i.e. the minimax of codes left in S. So the function finds the guess
   -- in S with the shortest: longest possible S after elimination (max_s)
   ------------------------------------
+
   nextGuess :: [Code] -> Code
-  nextGuess s = mini max_s
-    where  mini  f = minimumBy (comparing f) s
+  nextGuess (ans:[]) = ans
+  nextGuess s = nextGuessM s
+
+
+
+-----
+  nextGuessT :: [Code] -> Code
+  nextGuessT s = if (length s) == 1
+                then
+                  head s
+                else
+                  minimumBy (comparing valg) codes
+                    where valg g = maximum . map length . groupOn id . map (score g) $ s
+  temp = ["abcd","abdc","abbb","abcc"]
+
+  groupOn :: Ord b => (a -> b)  -> [a] -> [[a]]
+  groupOn f = groupBy ((==) `on`  f) . sortBy (comparing f)
+
+-----
+  nextGuessM :: [Code] -> Code
+  nextGuessM s = mini max_s
+    where  mini  f = minimumBy (comparing f) codes
            max_s g = maximumBy (comparing length) [eliminate r g s | r <- results]
            -- returns the largest S a 'g'uess could leave
+-----
 
   ------------------------------------
   -- |
