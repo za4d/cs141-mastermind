@@ -3,10 +3,6 @@ module Temp where
 
   import Data.List
 
-
-
-
-
   score' :: Code -> Code -> Score
   score' code guess = (c,w-c)
     where

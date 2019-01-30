@@ -3,8 +3,12 @@
 -- Coursework 1: Mastermind                                                   --
 --------------------------------------------------------------------------------
 
+{-- TODO
+ - acbf
+ - acfc   --}
+
 -- | This module should contain your game code.
-  module Game where
+module Game where
   import Data.List
   import Data.Ix
   import Data.Ord
