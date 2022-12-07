@@ -1,2 +1,3 @@
-# cs141-mastermind
-- TEST mastermind repo
+# Scratch clone
+
+Second coursework for CS141.
